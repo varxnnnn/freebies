@@ -364,21 +364,90 @@ class _HomePageState extends State<HomePage> {
 
             const SizedBox(height: 20),
 
-            // Ongoing Tasks
-            const Text("Ongoing Tasks",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 10),
+            // Ongoing Tasks Section
             Column(
-              children: tasks
-                  .map((task) => Card(
-                child: ListTile(
-                  leading: const Icon(Icons.task),
-                  title: Text(task["title"]!),
-                  trailing: Text(task["points"]!),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title + View All
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      "Ongoing Tasks",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      "View All",
+                      style: TextStyle(
+                          fontSize: 12, color: Colors.blue, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-              ))
-                  .toList(),
+                const SizedBox(height: 10),
+                // List of Tasks
+                Column(
+                  children: tasks.map((task) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(45),
+                          border: Border.all(color: Colors.orange, width: 2),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: Row(
+                          children: [
+                            // Circular Task Icon
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.orange.withOpacity(0.2),
+                              child: const Icon(Icons.task, color: Colors.orange),
+                            ),
+                            const SizedBox(width: 16),
+                            // Task Details
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    task["title"]!,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold, fontSize: 14),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Daily Challenge", // or "Weekly Challenge"
+                                    style:
+                                    TextStyle(fontSize: 12, color: Colors.grey[600]),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Reward Coins
+                            Row(
+                              children: [
+                                const Icon(Icons.monetization_on,
+                                    color: Colors.orange, size: 18),
+                                const SizedBox(width: 4),
+                                Text(
+                                  task["points"]!,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold, color: Colors.orange),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 12),
+                            // 3-dot menu
+                            const Icon(Icons.more_vert),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
+
 
             const SizedBox(height: 20),
 
