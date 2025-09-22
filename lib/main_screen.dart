@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(),
     FreebiesPage(),
     WalletPage(),
-    ExplorePage(),
+    ExploreApp(),
     ProfilePage(),
   ];
 
