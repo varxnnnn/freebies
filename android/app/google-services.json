@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "518660304413",
-    "project_id": "projectx-852ca",
-    "storage_bucket": "projectx-852ca.firebasestorage.app"
+    "project_number": "737618179891",
+    "firebase_url": "https://freebees-322b1-default-rtdb.firebaseio.com",
+    "project_id": "freebees-322b1",
+    "storage_bucket": "freebees-322b1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:518660304413:android:8d5a9f37e7d720d5d920f4",
+        "mobilesdk_app_id": "1:737618179891:android:793cfe70ead137d9a77046",
         "android_client_info": {
           "package_name": "com.example.projectx"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "737618179891-o1hqt8b0viagnhg8d7lti7aimnlffe4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBUrjcdIShn3QwRQED9Ox7mMI_qAcuAoiM"
+          "current_key": "AIzaSyA0pdsiwIDr-kgpDuXZzlL8otZKY0i7j1c"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737618179891-o1hqt8b0viagnhg8d7lti7aimnlffe4k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "737618179891-703v8gm4li1c62lcglusfc3i6mlc2o18.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.projectx"
+              }
+            }
+          ]
         }
       }
     }
