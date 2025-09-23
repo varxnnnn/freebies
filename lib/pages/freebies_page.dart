@@ -29,7 +29,7 @@ class FreebiesPage extends StatelessWidget {
             child: TabBarView(
               children: [
                 MilestonePage(),
-                const LeaderboardPage(),
+                LeaderboardPage(),
               ],
             ),
           ),

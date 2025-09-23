@@ -68,28 +68,6 @@ class _MilestonePageState extends State<MilestonePage> {
                 ],
               ),
             ),
-
-            // Tabs
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text("MilestMilestone",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange)),
-                  Text("Leaderboard",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-
             // Progress Bar Card
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
