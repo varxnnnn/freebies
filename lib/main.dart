@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'login_screen.dart'; // your login screen
+import 'pages/Auth/login_screen.dart'; // your login screen
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

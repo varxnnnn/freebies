@@ -1,14 +1,333 @@
 import 'package:flutter/material.dart';
 
-class WalletPage extends StatelessWidget {
-  const WalletPage({super.key});
+void main() {
+  runApp(const WalletApp());
+}
+
+class WalletApp extends StatelessWidget {
+  const WalletApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "💰 Wallet Page",
-        style: TextStyle(fontSize: 24),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: WalletScreen(),
+    );
+  }
+}
+
+class WalletScreen extends StatefulWidget {
+  const WalletScreen({Key? key}) : super(key: key);
+
+  @override
+  State<WalletScreen> createState() => _WalletScreenState();
+}
+
+class _WalletScreenState extends State<WalletScreen> {
+  // Dummy data
+  final int _walletBalance = 350;
+  final String _rank = "#98";
+  final bool _rankTrendUp = true;
+
+  // Badges
+  final List<String> _badges = [
+    "https://via.placeholder.com/60/FF6B6B/FFFFFF?text=B1",
+    "https://via.placeholder.com/60/4ECDC4/FFFFFF?text=B2",
+    "https://via.placeholder.com/60/45B7D1/FFFFFF?text=B3",
+    "https://via.placeholder.com/60/E67E22/FFFFFF?text=B4",
+  ];
+
+  // Rewards
+  final List<Map<String, dynamic>> _rewards = [
+    {'title': 'Netflix 1 Month Subscription', 'image': 'https://via.placeholder.com/40/4ECDC4/FFFFFF?text=N'},
+    {'title': 'Netflix 1 Month Subscription', 'image': 'https://via.placeholder.com/40/4ECDC4/FFFFFF?text=N'},
+    {'title': 'Netflix 1 Month Subscription', 'image': 'https://via.placeholder.com/40/4ECDC4/FFFFFF?text=N'},
+    {'title': 'Netflix 1 Month Subscription', 'image': 'https://via.placeholder.com/40/4ECDC4/FFFFFF?text=N'},
+    {'title': 'Netflix 1 Month Subscription', 'image': 'https://via.placeholder.com/40/4ECDC4/FFFFFF?text=N'},
+    {'title': 'Netflix 1 Month Subscription', 'image': 'https://via.placeholder.com/40/4ECDC4/FFFFFF?text=N'},
+  ];
+
+  void _onInvitePressed() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Invite sent!")),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: screenHeight * 0.03),
+
+            // Header with logo
+            Row(
+              children: [
+                Text(
+                  "BestThings",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  "Free",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: screenHeight * 0.02),
+
+            // Profile & Wallet Card
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: screenWidth * 0.1,
+                  backgroundImage: NetworkImage(
+                    "https://via.placeholder.com/100/FF6B6B/FFFFFF?text=AR",
+                  ),
+                ),
+                SizedBox(width: screenWidth * 0.03),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(screenWidth * 0.03),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.orange.shade200),
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "My Wallet",
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.045,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        Row(
+                          children: [
+                            Icon(Icons.monetization_on, size: 18, color: Colors.orange),
+                            SizedBox(width: 4),
+                            Text(
+                              "$_walletBalance",
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.05,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.purple[500],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        Row(
+                          children: [
+                            Text(
+                              _rank,
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.035,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(
+                              _rankTrendUp ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                              color: _rankTrendUp ? Colors.green : Colors.red,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: screenHeight * 0.03),
+
+            // Earned Badges
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Earned Badges",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "View all",
+                    style: TextStyle(fontSize: screenWidth * 0.03, color: Colors.blue),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                spacing: screenWidth * 0.02,
+                runSpacing: screenWidth * 0.02,
+                children: _badges.map((badge) {
+                  return Container(
+                    width: screenWidth * 0.15,
+                    height: screenWidth * 0.15,
+                    decoration: BoxDecoration(
+                      color: Colors.orange[100],
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(color: Colors.orange[300]!),
+                    ),
+                    child: Center(
+                      child: Image.network(
+                        badge,
+                        width: screenWidth * 0.1,
+                        height: screenWidth * 0.1,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.03),
+
+            // My Rewards
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "My Rewards",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "View all",
+                    style: TextStyle(fontSize: screenWidth * 0.03, color: Colors.blue),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            SizedBox(
+              width: double.infinity,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: screenWidth * 0.02,
+                  mainAxisSpacing: screenWidth * 0.02,
+                  childAspectRatio: 1.0,
+                ),
+                itemCount: _rewards.length,
+                itemBuilder: (context, index) {
+                  final reward = _rewards[index];
+                  return Container(
+                    padding: EdgeInsets.all(screenWidth * 0.02),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.orange.shade200),
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.orange[100],
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(color: Colors.orange[300]!),
+                          ),
+                          child: Image.network(
+                            reward['image'],
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            reward['title'],
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.035,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.03),
+
+            // Top Winners Today
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Top Winners Today",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _onInvitePressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  child: Text(
+                    "Invite",
+                    style: TextStyle(fontSize: screenWidth * 0.035),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            Text(
+              "Invite Friends to Earn More Freebies",
+              style: TextStyle(
+                fontSize: screenWidth * 0.03,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.05),
+          ],
+        ),
       ),
     );
   }

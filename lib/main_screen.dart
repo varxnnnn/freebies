@@ -18,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = const [
     HomePage(),
     FreebiesPage(),
-    WalletPage(),
+    WalletApp(),
     ExploreApp(),
     ProfilePage(),
   ];
@@ -40,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.card_giftcard), label: "Freebies"),
+          BottomNavigationBarItem(icon: Icon(Icons.card_giftcard), label: "Milestone"),
           BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: "Wallet"),
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Explore"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
