@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:projectx/pages/explore_page.dart';
 import 'pages/home_page.dart';
 import 'pages/freebies_page.dart';
 import 'pages/wallet_page.dart';
-import 'pages/explore_page.dart';
 import 'pages/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(),
     FreebiesPage(),
     WalletApp(),
-    ExploreApp(),
+    ExploreScreen(),
     ProfilePage(),
   ];
 

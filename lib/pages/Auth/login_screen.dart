@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../main_screen.dart';
 import 'signup_screen.dart';
 
@@ -19,7 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _errorMessage;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // ✅ Login with email & password
   Future<void> _login() async {
     setState(() {
       _loading = true;
@@ -27,15 +30,36 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _auth.signInWithEmailAndPassword(
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainScreen()),
-      );
+      User? user = userCredential.user;
+      if (user != null) {
+        // Ensure user data exists in Firestore
+        final doc = await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (!doc.exists) {
+          // Minimal fallback data
+          await _firestore
+              .collection('users')
+              .doc(user.uid)
+              .set({
+            "email": user.email,
+            "uid": user.uid,
+            "createdAt": FieldValue.serverTimestamp(),
+          });
+        }
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         _errorMessage = "No user found with this email";
@@ -51,11 +75,16 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  /// ✅ Google Sign-In
+  // ✅ Google Sign-In
   Future<void> _signInWithGoogle() async {
+    setState(() {
+      _loading = true;
+      _errorMessage = null;
+    });
+
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return; // User canceled login
+      if (googleUser == null) return;
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
@@ -64,14 +93,53 @@ class _LoginScreenState extends State<LoginScreen> {
         idToken: googleAuth.idToken,
       );
 
-      await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      User? user = userCredential.user;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainScreen()),
-      );
+      if (user != null) {
+        final doc = await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection('save_all_user_data')
+            .doc(user.uid)
+            .get();
+
+        if (!doc.exists) {
+          String name = user.displayName ?? "Google User";
+          await _firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('save_all_user_data')
+              .doc(user.uid)
+              .set({
+            "name": name,
+            "email": user.email,
+            "phone": "",
+            "password": "",
+            "age": 0,
+            "gender": "",
+            "location": "",
+            "coins": 0,
+            "currentLevel": 0,
+            "activitiesCompleted": 0,
+            "wallet": 0,
+            "totalPoints": 0,
+            "vouchers": 0,
+            "friendsReferred": 0,
+            "uid": user.uid,
+            "createdAt": FieldValue.serverTimestamp(),
+          });
+        }
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MainScreen()),
+        );
+      }
     } catch (e) {
       setState(() => _errorMessage = "Google Sign-In failed: $e");
+    } finally {
+      setState(() => _loading = false);
     }
   }
 
@@ -162,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ElevatedButton.icon(
                     onPressed: _signInWithGoogle,
                     icon: Image.asset(
-                      'assets/google_image.webp', // your Google icon asset
+                      'assets/google_image.webp',
                       height: 24,
                       width: 24,
                     ),

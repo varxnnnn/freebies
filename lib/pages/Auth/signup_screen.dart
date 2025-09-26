@@ -59,7 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
       if (user != null) {
         String referralCode = _generateReferralCode(name, user.uid);
 
-        await _firestore.collection('users').doc(user.uid).set({
+        final userData = {
           "name": name,
           "email": email,
           "phone": phone,
@@ -77,7 +77,13 @@ class _SignupScreenState extends State<SignupScreen> {
           "referralCode": referralCode,
           "uid": user.uid,
           "createdAt": FieldValue.serverTimestamp(),
-        });
+        };
+
+        // Save in users/{user_id}/save_all_user_data
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(userData);
 
         Navigator.pushReplacement(
           context,
@@ -125,7 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
           String name = user.displayName ?? "Google User";
           String referralCode = _generateReferralCode(name, user.uid);
 
-          await _firestore.collection('users').doc(user.uid).set({
+          final userData = {
             "name": name,
             "email": user.email,
             "phone": "",
@@ -143,7 +149,15 @@ class _SignupScreenState extends State<SignupScreen> {
             "referralCode": referralCode,
             "uid": user.uid,
             "createdAt": FieldValue.serverTimestamp(),
-          });
+          };
+
+          // Save in users/{user_id}/save_all_user_data
+          await _firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('save_all_user_data')
+              .doc(user.uid)
+              .set(userData);
         }
 
         Navigator.pushReplacement(
