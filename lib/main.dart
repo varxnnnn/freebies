@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:flutter/services.dart';
 import 'pages/Auth/login_screen.dart'; // your login screen
 
 void main() async {
@@ -25,7 +25,10 @@ void main() async {
     // Mobile (Android / iOS)
     await Firebase.initializeApp();
   }
-
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.manual,
+    overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
+  );
   runApp(const MyApp());
 }
 

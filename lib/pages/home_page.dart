@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:projectx/pages/explore_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -177,56 +178,46 @@ class _HomePageState extends State<HomePage> {
 
             const SizedBox(height: 20),
 
-            // Popular Categories
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text("Popular Categories",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
-                    Text("View All",
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold))
-                  ],
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 90,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      final cat = categories[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.orange,
-                              child: CircleAvatar(
-                                radius: 28,
-                                backgroundImage: NetworkImage(cat["image"]!),
-                                backgroundColor: Colors.transparent,
-                              ),
+            SizedBox(
+              height: 90,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final cat = categories[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: GestureDetector( // <-- Wrap with GestureDetector
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ExploreScreen(), // Navigate to ExplorePage
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.orange,
+                            child: CircleAvatar(
+                              radius: 28,
+                              backgroundImage: NetworkImage(cat["image"]!),
+                              backgroundColor: Colors.transparent,
                             ),
-                            const SizedBox(height: 5),
-                            Text(
-                              cat["name"]!,
-                              style: const TextStyle(fontSize: 12),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            cat["name"]!,
+                            style: const TextStyle(fontSize: 12),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
 
             const SizedBox(height: 20),

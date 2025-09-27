@@ -4,6 +4,7 @@ import 'pages/home_page.dart';
 import 'pages/freebies_page.dart';
 import 'pages/wallet_page.dart';
 import 'pages/profile_page.dart';
+import 'package:flutter/services.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -29,14 +30,17 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Main Screen")),
-      body: _pages[_selectedIndex],
+      body: SafeArea(  // <-- Add SafeArea here
+        child: _pages[_selectedIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
+        selectedItemColor: Colors.orange,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),

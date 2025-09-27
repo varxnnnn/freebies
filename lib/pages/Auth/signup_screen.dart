@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../../main_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -79,11 +78,8 @@ class _SignupScreenState extends State<SignupScreen> {
           "createdAt": FieldValue.serverTimestamp(),
         };
 
-        // Save in users/{user_id}/save_all_user_data
-        await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .set(userData);
+        // Save in users/{user_id}
+        await _firestore.collection('users').doc(user.uid).set(userData);
 
         Navigator.pushReplacement(
           context,
@@ -100,73 +96,6 @@ class _SignupScreenState extends State<SignupScreen> {
       }
     } catch (e) {
       _errorMessage = e.toString();
-    } finally {
-      setState(() => _loading = false);
-    }
-  }
-
-  // Google Sign-In
-  Future<void> _signInWithGoogle() async {
-    setState(() {
-      _loading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return;
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
-      User? user = userCredential.user;
-
-      if (user != null) {
-        final doc = await _firestore.collection('users').doc(user.uid).get();
-        if (!doc.exists) {
-          String name = user.displayName ?? "Google User";
-          String referralCode = _generateReferralCode(name, user.uid);
-
-          final userData = {
-            "name": name,
-            "email": user.email,
-            "phone": "",
-            "password": "",
-            "age": 0,
-            "gender": "",
-            "location": "",
-            "coins": 0,
-            "currentLevel": 0,
-            "activitiesCompleted": 0,
-            "wallet": 0,
-            "totalPoints": 0,
-            "vouchers": 0,
-            "friendsReferred": 0,
-            "referralCode": referralCode,
-            "uid": user.uid,
-            "createdAt": FieldValue.serverTimestamp(),
-          };
-
-          // Save in users/{user_id}/save_all_user_data
-          await _firestore
-              .collection('users')
-              .doc(user.uid)
-              .collection('save_all_user_data')
-              .doc(user.uid)
-              .set(userData);
-        }
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const MainScreen()),
-        );
-      }
-    } catch (e) {
-      setState(() => _errorMessage = "Google Sign-In failed: $e");
     } finally {
       setState(() => _loading = false);
     }
@@ -204,6 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: TextStyle(fontSize: 16, color: Colors.black54),
                 ),
                 const SizedBox(height: 30),
+
                 // --- Inputs ---
                 TextField(
                   controller: _nameController,
@@ -269,6 +199,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 25),
+
                 _loading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
@@ -282,29 +213,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: const Text("Sign Up"),
                 ),
                 const SizedBox(height: 20),
-                const Center(child: Text("or sign up with")),
-                const SizedBox(height: 10),
-                _loading
-                    ? const SizedBox.shrink()
-                    : ElevatedButton.icon(
-                  onPressed: _signInWithGoogle,
-                  icon: Image.asset(
-                    'assets/google_image.webp',
-                    height: 24,
-                    width: 24,
-                  ),
-                  label: const Text("Continue with Google"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    minimumSize: const Size.fromHeight(50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

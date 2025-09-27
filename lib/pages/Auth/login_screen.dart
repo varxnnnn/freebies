@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../main_screen.dart';
 import 'signup_screen.dart';
@@ -38,17 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
       User? user = userCredential.user;
       if (user != null) {
         // Ensure user data exists in Firestore
-        final doc = await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .get();
+        final doc = await _firestore.collection('users').doc(user.uid).get();
 
         if (!doc.exists) {
           // Minimal fallback data
-          await _firestore
-              .collection('users')
-              .doc(user.uid)
-              .set({
+          await _firestore.collection('users').doc(user.uid).set({
             "email": user.email,
             "uid": user.uid,
             "createdAt": FieldValue.serverTimestamp(),
@@ -70,74 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       _errorMessage = e.toString();
-    } finally {
-      setState(() => _loading = false);
-    }
-  }
-
-  // ✅ Google Sign-In
-  Future<void> _signInWithGoogle() async {
-    setState(() {
-      _loading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return;
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
-      User? user = userCredential.user;
-
-      if (user != null) {
-        final doc = await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('save_all_user_data')
-            .doc(user.uid)
-            .get();
-
-        if (!doc.exists) {
-          String name = user.displayName ?? "Google User";
-          await _firestore
-              .collection('users')
-              .doc(user.uid)
-              .collection('save_all_user_data')
-              .doc(user.uid)
-              .set({
-            "name": name,
-            "email": user.email,
-            "phone": "",
-            "password": "",
-            "age": 0,
-            "gender": "",
-            "location": "",
-            "coins": 0,
-            "currentLevel": 0,
-            "activitiesCompleted": 0,
-            "wallet": 0,
-            "totalPoints": 0,
-            "vouchers": 0,
-            "friendsReferred": 0,
-            "uid": user.uid,
-            "createdAt": FieldValue.serverTimestamp(),
-          });
-        }
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const MainScreen()),
-        );
-      }
-    } catch (e) {
-      setState(() => _errorMessage = "Google Sign-In failed: $e");
     } finally {
       setState(() => _loading = false);
     }
@@ -225,30 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text("Login"),
                   ),
                   const SizedBox(height: 20),
-                  const Text("or sign in with"),
+                  // 🔥 Removed Google Sign-In, but keeping spacing/UI balance
                   const SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    onPressed: _signInWithGoogle,
-                    icon: Image.asset(
-                      'assets/google_image.webp',
-                      height: 24,
-                      width: 24,
-                    ),
-                    label: const Text("Continue with Google"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: const BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

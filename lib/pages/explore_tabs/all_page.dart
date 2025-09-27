@@ -113,6 +113,94 @@ class AllPage extends StatelessWidget {
           ),
           SizedBox(height: screenHeight * 0.03),
 
+          // Quick Earn Cards
+          const Text(
+            "Quick Earn",
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _quickEarnList.length,
+            itemBuilder: (context, index) {
+              final item = _quickEarnList[index];
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(screenWidth * 0.03),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.orange.shade200),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.1), blurRadius: 4),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item['title']!,
+                          style: TextStyle(
+                              fontSize: screenWidth * 0.04,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          item['desc']!,
+                          style: TextStyle(
+                              fontSize: screenWidth * 0.03, color: Colors.grey),
+                        ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.orange[500],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                item['type']!,
+                                style: const TextStyle(
+                                    fontSize: 10, color: Colors.white),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "${item['points']} | ${item['time']}",
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.orange[500],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.arrow_forward,
+                            color: Colors.white, size: 18),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+
+          SizedBox(height: screenHeight * 0.03),
+
           // Featured Offers & Tech Challenge
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,93 +316,8 @@ class AllPage extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: screenHeight * 0.03),
 
-          // Quick Earn Cards
-          const Text(
-            "Quick Earn",
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-          ),
-          SizedBox(height: screenHeight * 0.02),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _quickEarnList.length,
-            itemBuilder: (context, index) {
-              final item = _quickEarnList[index];
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: EdgeInsets.all(screenWidth * 0.03),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.orange.shade200),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.1), blurRadius: 4),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item['title']!,
-                          style: TextStyle(
-                              fontSize: screenWidth * 0.04,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          item['desc']!,
-                          style: TextStyle(
-                              fontSize: screenWidth * 0.03, color: Colors.grey),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.orange[500],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                item['type']!,
-                                style: const TextStyle(
-                                    fontSize: 10, color: Colors.white),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              "${item['points']} | ${item['time']}",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.orange[500],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Center(
-                        child: Icon(Icons.arrow_forward,
-                            color: Colors.white, size: 18),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+
           SizedBox(height: screenHeight * 0.05),
         ],
       ),
