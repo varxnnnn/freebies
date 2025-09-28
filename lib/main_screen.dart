@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectx/pages/explore_page.dart';
-import 'pages/home_page.dart';
+import 'ui/screens/milestone_page.dart';
+import 'ui/screens/home_screen.dart';
 import 'pages/freebies_page.dart';
 import 'pages/wallet_page.dart';
 import 'pages/profile_page.dart';
@@ -18,8 +19,8 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = const [
     HomePage(),
-    FreebiesPage(),
-    WalletApp(),
+    MilestonePage(),
+    WalletScreen(),
     ExploreScreen(),
     ProfilePage(),
   ];
@@ -30,11 +31,11 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(  // <-- Add SafeArea here
+      body: SafeArea(
+        // <-- Add SafeArea here
         child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -44,8 +45,10 @@ class _MainScreenState extends State<MainScreen> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.card_giftcard), label: "Milestone"),
-          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: "Wallet"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.card_giftcard), label: "Milestone"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance_wallet), label: "Wallet"),
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Explore"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
