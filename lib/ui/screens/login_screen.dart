@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:projectx/providers/auth_provider.dart'; // Adjust path
 import '../../main_screen.dart';
 import 'signup_screen.dart';
 
@@ -15,68 +15,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _loading = false;
-  String? _errorMessage;
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  // ✅ Login with email & password
-  Future<void> _login() async {
-    setState(() {
-      _loading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      User? user = userCredential.user;
-      if (user != null) {
-        // Ensure user data exists in Firestore
-        final doc = await _firestore.collection('users').doc(user.uid).get();
-
-        if (!doc.exists) {
-          // Minimal fallback data
-          await _firestore.collection('users').doc(user.uid).set({
-            "email": user.email,
-            "uid": user.uid,
-            "createdAt": FieldValue.serverTimestamp(),
-          });
-        }
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        _errorMessage = "No user found with this email";
-      } else if (e.code == 'wrong-password') {
-        _errorMessage = "Incorrect password";
-      } else {
-        _errorMessage = e.message;
-      }
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      setState(() => _loading = false);
-    }
-  }
-
-  void _navigateToSignup() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SignupScreen()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -88,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 40),
                   const Text(
-                    "BestThingsFree",
+                    "Giftardo",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -133,31 +75,52 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _loading
+                  authProvider.isLoading
                       ? const CircularProgressIndicator()
                       : ElevatedButton(
-                    onPressed: _login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text("Login"),
-                  ),
+                          onPressed: () async {
+                            await authProvider.signIn(
+                              _emailController.text.trim(),
+                              _passwordController.text.trim(),
+                            );
+
+                            // On success, navigate
+                            if (authProvider.error == null) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MainScreen(),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 15,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text("Login"),
+                        ),
                   const SizedBox(height: 20),
-                  // 🔥 Removed Google Sign-In, but keeping spacing/UI balance
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("Create an account?"),
                       TextButton(
-                        onPressed: _navigateToSignup,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignupScreen(),
+                            ),
+                          );
+                        },
                         child: const Text(
                           "Sign Up",
                           style: TextStyle(
@@ -168,9 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  if (_errorMessage != null) ...[
+                  if (authProvider.error != null) ...[
                     const SizedBox(height: 10),
-                    Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                    Text(
+                      authProvider.error!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ],
                 ],
               ),

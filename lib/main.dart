@@ -2,13 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'pages/Auth/login_screen.dart'; // your login screen
+import 'package:provider/provider.dart';
+import 'ui/screens/login_screen.dart';
+import 'providers/wallet_provider.dart';
+import 'providers/leaderboard_provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/home_provider.dart';
+import 'providers/milestone_provider.dart'; // Your new HomeProvider
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (kIsWeb) {
-    // Web initialization
     await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: "AIzaSyAsQktqnZaze53woDUwrzXpv44Ew-qFCOA",
@@ -18,18 +23,29 @@ void main() async {
           storageBucket: "freebees-322b1.firebasestorage.app",
           messagingSenderId: "737618179891",
           appId: "1:737618179891:web:4ea9c152e3b90ea2a77046",
-          measurementId: "G-X12J7KXYTJ"
-      ),
+          measurementId: "G-X12J7KXYTJ"),
     );
   } else {
-    // Mobile (Android / iOS)
     await Firebase.initializeApp();
   }
+
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
   );
-  runApp(const MyApp());
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => WalletProvider()),
+        ChangeNotifierProvider(create: (context) => HomeProvider()),
+        ChangeNotifierProvider(create: (context) => MilestoneProvider()),
+      ChangeNotifierProvider(create: (context) => LeaderboardProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -39,7 +55,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Firebase Auth Demo',
+      title: 'BestFreethings', // Updated to match your app name
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -47,7 +63,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
-
+        // Add other routes here later (e.g., '/main')
       },
     );
   }
