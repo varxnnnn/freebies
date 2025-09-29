@@ -8,6 +8,7 @@ import 'providers/wallet_provider.dart';
 import 'providers/leaderboard_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/home_provider.dart';
+import 'providers/reward_provider.dart';
 import 'providers/milestone_provider.dart'; // Your new HomeProvider
 
 void main() async {
@@ -42,6 +43,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => HomeProvider()),
         ChangeNotifierProvider(create: (context) => MilestoneProvider()),
       ChangeNotifierProvider(create: (context) => LeaderboardProvider()),
+        ChangeNotifierProvider(create: (context) => RewardProvider()),
       ],
       child: const MyApp(),
     ),

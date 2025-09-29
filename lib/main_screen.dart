@@ -3,9 +3,10 @@ import 'package:projectx/pages/explore_page.dart';
 import 'ui/screens/milestone_page.dart';
 import 'ui/screens/home_screen.dart';
 import 'pages/freebies_page.dart';
-import 'pages/wallet_page.dart';
+// import 'pages/wallet_page.dart';
 import 'pages/profile_page.dart';
 import 'package:flutter/services.dart';
+import 'ui/screens/wallet_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
