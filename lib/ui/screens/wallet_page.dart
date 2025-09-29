@@ -54,8 +54,8 @@ class _WalletScreenState extends State<WalletScreen> {
                 SizedBox(height: screenHeight * 0.03),
                 Row(
                   children: [
-                    Text("BestThings", style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold, color: Colors.black)),
-                    Text("Free", style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold, color: Colors.orange)),
+                    Text("Giftardo", style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold, color: Colors.black)),
+                    // Text("Free", style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold, color: Colors.orange)),
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.02),

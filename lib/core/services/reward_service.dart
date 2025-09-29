@@ -3,44 +3,31 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class RewardService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String? _uid = FirebaseAuth.instance.currentUser?.uid;
 
-  // 🔸 FOR TESTING: Hardcode the UID from your screenshot
-  final String _testUserId = "5Lo4wvbhvPRi6RdXNa1n9U86xRw1";
-  
-  
   Future<List<Map<String, dynamic>>> fetchUserRewards() async {
-    print("🔍 fetchUserRewards() called");
-    print("👤 Current authenticated UID: $_uid");
-    print("🧪 Using test UID for query: $_testUserId");
-
-    // Use test UID for now (replace with _uid when ready)
-    final String effectiveUid = _testUserId; // 👈 TEMP: forces correct user
-
-    if (effectiveUid.isEmpty) {
-      print("⚠️ No user ID available");
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print("⚠️ No authenticated user");
       return [];
     }
 
+    final String currentUid = user.uid;
+    print("🔍 fetchUserRewards() for UID: $currentUid");
+
     try {
-      print("📡 Fetching redemptions for user: $effectiveUid");
       final redemptionSnapshot = await _firestore
           .collection('redemptions')
-          .where('user_id', isEqualTo: effectiveUid)
+          .where('user_id', isEqualTo: currentUid)
           .get();
 
-      print("✅ Got ${redemptionSnapshot.docs.length} redemptions");
+      print("✅ Found ${redemptionSnapshot.docs.length} redemptions");
 
       final List<Map<String, dynamic>> rewards = [];
       for (var redemption in redemptionSnapshot.docs) {
         final data = redemption.data();
         final rewardId = data['reward_id']?.toString()?.trim();
-        print("📦 Processing redemption: ${redemption.id}, reward_id: $rewardId");
 
-        if (rewardId == null || rewardId.isEmpty) {
-          print("❌ Skipping: reward_id is null or empty");
-          continue;
-        }
+        if (rewardId == null || rewardId.isEmpty) continue;
 
         final rewardDoc = await _firestore
             .collection('sponsor_rewards')
@@ -49,29 +36,24 @@ class RewardService {
 
         if (rewardDoc.exists) {
           final rewardData = rewardDoc.data()!;
-          print("✅ Found reward: ${rewardData['title'] ?? 'N/A'}");
-
           rewards.add({
             "title": rewardData['title'] ?? "Reward",
             "image": "https://via.placeholder.com/40/4ECDC4/FFFFFF?text=R",
             "cost_points": rewardData['cost_points'] ?? 0,
             "status": data['status'] ?? "pending",
           });
-        } else {
-          print("❌ Reward not found for ID: $rewardId");
         }
       }
 
-      print("🎉 Returning ${rewards.length} user rewards");
+      print("🎉 Returning ${rewards.length} rewards");
       return rewards;
     } catch (e, stack) {
-      print("💥 Error in fetchUserRewards: $e");
-      print("STACK: $stack");
+      print("💥 Error: $e");
       return [];
     }
   }
 
-  // Keep fetchAllRewards for fallback
+  // Keep this for fallback or admin view
   Future<List<Map<String, dynamic>>> fetchAllRewards() async {
     try {
       final snapshot = await _firestore
@@ -79,17 +61,15 @@ class RewardService {
           .where('status', isEqualTo: 'active')
           .get();
 
-      final List<Map<String, dynamic>> rewards = [];
-      for (var doc in snapshot.docs) {
+      return snapshot.docs.map((doc) {
         final data = doc.data();
-        rewards.add({
+        return {
           "title": data['title'] ?? "Reward",
           "image": "https://via.placeholder.com/40/4ECDC4/FFFFFF?text=R",
           "cost_points": data['cost_points'] ?? 0,
           "status": "available",
-        });
-      }
-      return rewards;
+        };
+      }).toList();
     } catch (e) {
       return [];
     }
