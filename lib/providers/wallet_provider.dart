@@ -4,38 +4,55 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class WalletProvider with ChangeNotifier {
-  int _walletAmount = 0; // We keep this name for UI clarity ("wallet" = points)
-  bool _isLoading = true;
+  int _walletAmount = 0;
 
   int get walletAmount => _walletAmount;
-  bool get isLoading => _isLoading;
 
+  // Fetch without loader — update silently
   Future<void> fetchWalletAmount() async {
-    _isLoading = true;
-    notifyListeners();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final doc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .get();
+      // Firestore uses local cache by default → very fast on repeat visits
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get(const GetOptions(source: Source.cache)); // 👈 Try cache first
 
-        if (doc.exists) {
-          // 🔥 Fetch 'points' from Firestore (not 'wallet')
-          _walletAmount = doc.data()?['points'] ?? 0;
-        } else {
-          _walletAmount = 0;
+      if (doc.exists) {
+        final points = doc.data()?['points'] ?? 0;
+        if (points != _walletAmount) {
+          _walletAmount = points;
+          notifyListeners(); // Only notify if value changed
         }
-      } else {
-        _walletAmount = 0;
       }
     } catch (e) {
-      _walletAmount = 0;
+      // Optional: log error, but don't show UI feedback
+      // print("Failed to fetch wallet: $e");
     }
+  }
 
-    _isLoading = false;
-    notifyListeners();
+  // Optional: Force-refresh from server (e.g., after earning points)
+  Future<void> refreshFromServer() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get(const GetOptions(source: Source.server)); // Force server
+
+      if (doc.exists) {
+        final points = doc.data()?['points'] ?? 0;
+        if (points != _walletAmount) {
+          _walletAmount = points;
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      // Ignore or log
+    }
   }
 }

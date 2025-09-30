@@ -47,15 +47,13 @@ class _MilestonePageState extends State<MilestonePage> {
                       ),
                       Row(
                         children: [
-                          const Icon(Icons.monetization_on, color: Colors.orange),
-                          const SizedBox(width: 4),
-                          walletProvider.isLoading
-                              ? const CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(Colors.orange))
-                              : Text(
-                                  "₹ ${walletProvider.walletAmount}",
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                ),
-                        ],
+  const Icon(Icons.monetization_on, color: Colors.orange),
+  const SizedBox(width: 4),
+  Text(
+    "₹ ${walletProvider.walletAmount}",
+    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+  ),
+],
                       )
                     ],
                   ),

@@ -83,27 +83,17 @@ class _WalletScreenState extends State<WalletScreen> {
                             SizedBox(height: screenHeight * 0.01),
                             Row(
                               children: [
-                                Icon(Icons.monetization_on, size: 18, color: Colors.orange),
-                                SizedBox(width: 4),
-                                if (walletProvider.isLoading)
-                                  const SizedBox(
-                                    width: 18,
-                                    height: 18,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation(Colors.orange),
-                                    ),
-                                  )
-                                else
-                                  Text(
-                                    "${walletProvider.walletAmount}",
-                                    style: TextStyle(
-                                      fontSize: screenWidth * 0.05,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.purple[500],
-                                    ),
-                                  ),
-                              ],
+  Icon(Icons.monetization_on, size: 18, color: Colors.orange),
+  SizedBox(width: 4),
+  Text(
+    "${walletProvider.walletAmount}",
+    style: TextStyle(
+      fontSize: screenWidth * 0.05,
+      fontWeight: FontWeight.w600,
+      color: Colors.purple[500],
+    ),
+  ),
+],
                             ),
                             SizedBox(height: screenHeight * 0.01),
                             Row(

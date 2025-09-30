@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class TaskService {
+class TaskServicem {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String? _uid = FirebaseAuth.instance.currentUser?.uid;
 

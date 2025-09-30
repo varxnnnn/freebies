@@ -10,7 +10,11 @@ import 'providers/auth_provider.dart';
 import 'providers/home_provider.dart';
 import 'providers/reward_provider.dart';
 import 'providers/profile_provider.dart';
-import 'providers/milestone_provider.dart'; // Your new HomeProvider
+import 'providers/milestone_provider.dart';
+import 'providers/poll_provider.dart';
+import 'providers/quiz_provider.dart ';
+import 'providers/survey_provider.dart';
+import 'providers/all_activities_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +50,10 @@ void main() async {
         ChangeNotifierProvider(create: (context) => LeaderboardProvider()),
         ChangeNotifierProvider(create: (context) => RewardProvider()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => PollProvider()),
+        ChangeNotifierProvider(create: (_) => QuizProvider()),
+        ChangeNotifierProvider(create: (_) => SurveyProvider()),
+        ChangeNotifierProvider(create: (_) => AllActivitiesProvider())
       ],
       child: const MyApp(),
     ),
@@ -59,7 +67,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'BestFreethings', // Updated to match your app name
+      title: 'Giftardo', // Updated to match your app name
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

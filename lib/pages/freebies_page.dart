@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'MilestonePage.dart';
-import 'LeaderboardPage.dart';
+// import 'MilestonePage.dart';
+import 'package:projectx/ui/screens/milestone_page.dart';
+import 'package:projectx/ui/screens/leaderboard_screen.dart';
 
 class FreebiesPage extends StatelessWidget {
   const FreebiesPage({super.key});
